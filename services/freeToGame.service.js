@@ -1,5 +1,6 @@
 "use strict"
 
+/* Service to fetch games */
 exports.freeToGame = async(endpoint) => {
 
     //Setting url
@@ -11,6 +12,7 @@ exports.freeToGame = async(endpoint) => {
         url = "https://www.freetogame.com/api/games";
     }
 
+    //Fetching data
     try {
         const response = await fetch(url);
 
