@@ -1,3 +1,5 @@
+"use strict"
+
 /* Authorized routes */
 const user = require("../controllers/profile.controller");
 
@@ -21,18 +23,6 @@ module.exports = (server) => {
             method: "GET",
             path: "/profile/reviews",
             handler: user.getReviews,
-            options: {
-                auth: {
-                    strategy: "jwt"
-                }
-            }
-        },
-
-        //Getting users saved-list
-        {
-            method: "GET",
-            path: "/profile/saved",
-            handler: user.getList,
             options: {
                 auth: {
                     strategy: "jwt"

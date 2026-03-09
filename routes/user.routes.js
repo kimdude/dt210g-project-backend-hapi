@@ -1,3 +1,5 @@
+"use strict"
+
 /* Routes handling users */
 const user = require("../controllers/user.controller");
 

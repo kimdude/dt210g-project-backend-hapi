@@ -1,7 +1,7 @@
 /* Model for saved list collection */
 const mongoose = require("mongoose");
 
-const ListSchema = mongoose.Schema({
+const ListSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

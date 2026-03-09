@@ -1,7 +1,7 @@
 /* Model for Review collection */
 const mongoose = require("mongoose");
 
-const ReviewSchema = mongoose.Schema({
+const ReviewSchema = new mongoose.Schema({
     gameId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Game",

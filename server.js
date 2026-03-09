@@ -70,6 +70,8 @@ const init = async() => {
     //Routes
     require("./routes/user.routes")(server);
     require("./routes/profile.routes")(server);
+    require("./routes/list.routes")(server);
+    require("./routes/game.routes")(server);
 
     //Starting server
     await server.start();

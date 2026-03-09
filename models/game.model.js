@@ -1,7 +1,7 @@
 /* Model for game collection */
 const mongoose = require("mongoose");
 
-const GameSchema = mongoose.Schema({
+const GameSchema = new mongoose.Schema({
     gameId: {
         type: Number,
         required: true,
@@ -15,7 +15,8 @@ const GameSchema = mongoose.Schema({
     score: {
         type: Number,
         min: 0,
-        max: 5
+        max: 5,
+        default: null
     }
 });
 
