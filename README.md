@@ -1,7 +1,9 @@
 # DT210G - Projekt backend
-Repot innehåller källkod för ett API som hanterar spelrecensioner. API:et bygger på ett externt API, (https://www.freetogame.com/api-doc)[FreeToGame]. När ett spel från FreeToGame recenseras, lagras recensionerna med det externa id:et. På så vis kan information om ett spel hämtas tillsammans med tillhörande recensioner.
+Repot innehåller källkod för ett API som hanterar spelrecensioner. API:et bygger på ett externt API, [FreeToGame](https://www.freetogame.com/api-doc). När ett spel från FreeToGame recenseras, lagras recensionerna med det externa id:et. På så vis kan information om ett spel hämtas tillsammans med tillhörande recensioner.
 
 Detta API hanterar, utöver recensioner, spels genomsnitts poäng, användare och personliga listor med sparade spel. API:et använder Jsonwebtoken för autentisering och Mongoose med MongoDB för lagring av datan.
+
+Grundlänk till API:et: [https://dt210g-project-backend-hapi.onrender.com/](https://dt210g-project-backend-hapi.onrender.com/)
 
 ## Router för användare
 |Metod             |Endpoint           |Beskrivning                             |Autentisering          |Övrigt                 |

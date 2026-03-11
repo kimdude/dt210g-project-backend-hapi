@@ -44,6 +44,11 @@ module.exports = (server) => {
                 validate: {
                     params: Joi.object({
                         _id: Joi.number().min(1).required()
+                    }),
+                    payload: Joi.object({
+                        rating: Joi.number().min(0).max(5).required(),
+                        title: Joi.string.min(3).max(20),
+                        description: Joi.string(5)
                     })
                 }
             }
@@ -61,6 +66,11 @@ module.exports = (server) => {
                 validate: {
                     params: Joi.object({
                         _id: Joi.string().required()
+                    }),
+                    payload: Joi.object({
+                        rating: Joi.number().min(0).max(5).required(),
+                        title: Joi.string.min(3).max(20),
+                        description: Joi.string(5)
                     })
                 }
             }
@@ -82,6 +92,5 @@ module.exports = (server) => {
                 }
             }
         }
-
     ]);
 }
