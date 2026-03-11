@@ -1,3 +1,5 @@
+"use strict"
+
 /* Controller to handle user */
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -51,8 +53,6 @@ exports.loginUser = async(request, h) => {
         return h.response({ id: validUser._id, username: validUser.username, displayName: validUser.displayName, token: token });
     
     } catch(error) {
-
-        console.log(error)
 
         if(error.message === "Invalid username or password") {
             return h.response({ error: error.message }).code(401);

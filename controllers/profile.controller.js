@@ -1,4 +1,6 @@
-/* Controller for authorized routes */
+"use strict"
+
+/* Controller for authorized user routes */
 const bcrypt = require("bcrypt");
 
 //Requiring models
@@ -30,7 +32,28 @@ exports.getReviews = async(request, h) => {
     try {
         const { _id } = request.auth.credentials;
 
-        const sharedReviews = await review.findOne({ userId: _id });
+        const sharedReviews = await review.aggregate([
+            {
+                $match: {
+                    userId: _id
+                }
+            },
+            {
+                $lookup: {
+                    from: "games",
+                    localField: "gameId",
+                    foreignField: "_id",
+                    as: "gameDetails"
+                }
+            }, 
+            {
+                $project: {
+                    "gameDetails._id": 0
+                }
+            },        
+            { $unwind: "$gameDetails" },
+            { $sort: {  "createdAt": -1 }}
+        ])
 
         if(!sharedReviews) {
             return h.response({ error: "No reviews found." }).code(404);

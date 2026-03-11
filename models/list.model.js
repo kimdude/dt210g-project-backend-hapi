@@ -12,6 +12,7 @@ const ListSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Game"
     }]
-});
+},
+{ timestamps: true });
 
 module.exports = mongoose.model("List", ListSchema);

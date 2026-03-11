@@ -2,6 +2,7 @@
 
 /* Routes handling games */
 const game = require("../controllers/game.controller");
+const Joi = require("joi");
 
 module.exports = (server) => {
     server.route([
@@ -22,6 +23,11 @@ module.exports = (server) => {
                 auth: {
                     mode: "optional",
                     strategy: "jwt"
+                },
+                validate: {
+                    params: Joi.object({
+                        _id: Joi.number().min(1).required()
+                    })
                 }
             }
         },
@@ -34,6 +40,11 @@ module.exports = (server) => {
             options: {
                 auth: {
                     strategy: "jwt"
+                },
+                validate: {
+                    params: Joi.object({
+                        _id: Joi.number().min(1).required()
+                    })
                 }
             }
         },
@@ -46,6 +57,11 @@ module.exports = (server) => {
             options: {
                 auth: {
                     strategy: "jwt"
+                },
+                validate: {
+                    params: Joi.object({
+                        _id: Joi.string().required()
+                    })
                 }
             }
         },
@@ -58,6 +74,11 @@ module.exports = (server) => {
             options: {
                 auth: {
                     strategy: "jwt"
+                },
+                validate: {
+                    params: Joi.object({
+                        _id: Joi.string().required()
+                    })
                 }
             }
         }

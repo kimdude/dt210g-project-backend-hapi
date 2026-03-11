@@ -102,7 +102,7 @@ _/games?category=mmorpg_
 ## Router för recensioner
 |Metod             |Endpoint                |Beskrivning             |Autentisering          |Övrigt                 |
 |------------------|------------------------|------------------------|-----------------------|-----------------------|
-|POST              |/games/reviews/{id}     |Lägger till recension   |Ja                     |Tar spelets siffer id  |
+|POST              |/games/reviews          |Lägger till recension   |Ja                     |Tar spelets siffer id  |
 |PUT               |/games/reviews/{id}     |Uppdaterar recension    |Ja                     |Tar recensionens id    |
 |DELETE            |/games/reviews/{id}     |Tar bort recension      |Ja                     |Tar recensionens id    |
 

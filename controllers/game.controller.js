@@ -1,12 +1,12 @@
 "use strict"
 
 /* Controller for game routes */
-const user = require("../models/user.model");
 const list = require("../models/list.model");
 const review = require("../models/review.model");
 const game = require("../models/game.model");
 
 const service = require("../services/freeToGame.service");
+const { isValidObjectId } = require("mongoose");
 
 //Getting all games
 exports.getAllGames = async(request, h) => {
@@ -167,7 +167,11 @@ exports.updateReview = async(request, h) => {
     try {
         const userId = request.auth.credentials._id;
         const reviewId = request.params._id;
-        const { rating, title, description } = request.payload;
+        const { rating, title, description } = request.payload; 
+
+        if(!isValidObjectId(reviewId)) {
+            return h.response({ error: "Invalid review ID." }).code(404);
+        }
 
         //Validating review
         const validReview = await review.findOne({ _id: reviewId });
@@ -198,6 +202,7 @@ exports.updateReview = async(request, h) => {
         return h.response(updatedReview).code(200);
 
     } catch(error) {
+        console.log(error)
         return h.response({ error: "An error occurred while updating review. Please try again later." }).code(500);
     }
 }
@@ -208,6 +213,10 @@ exports.deleteReview = async(request, h) => {
     try {
         const userId = request.auth.credentials._id;
         const { _id } = request.params;
+
+        if(!isValidObjectId(_id)) {
+            return h.response({ error: "Invalid review ID. ID must be a string." }).code(404);
+        }
 
         //Checking if user created it
         const validReview = await review.findById(_id);

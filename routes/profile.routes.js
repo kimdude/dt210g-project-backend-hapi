@@ -2,6 +2,7 @@
 
 /* Authorized routes */
 const user = require("../controllers/profile.controller");
+const Joi = require("joi");
 
 module.exports = (server) => {
     server.route([
@@ -38,6 +39,12 @@ module.exports = (server) => {
             options: {
                 auth: {
                     strategy: "jwt"
+                },
+                validate: {
+                    payload: Joi.object({
+                        password: Joi.string().min(8).required(),
+                        newPassword: Joi.string().min(8).required()
+                    })
                 }
             }
         },

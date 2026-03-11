@@ -1,15 +1,36 @@
+"use strict"
+
 /* Controller to handle users saved games-list */
 const game = require("../models/game.model");
 const list = require("../models/list.model");
+
+const service = require("../services/freeToGame.service");
+const { isValidObjectId } = require("mongoose");
 
 //Getting saved games
 exports.getList = async(request, h) => {
     try {
         const { _id } = request.auth.credentials;
 
-        const savedGames = await list.findOne({ userId: _id });
+        const savedGames = await list.aggregate([
+            {
+                $match: {
+                    userId: _id
+                }
+            },
+            {         
+                $lookup: {
+                    from: "games",
+                    localField: "games",
+                    foreignField: "_id",
+                    as: "gameDetails"
+                }
+            },
+            { $unwind: "$gameDetails" },
+            { $replaceRoot: { newRoot: "$gameDetails" }}
+        ]);
 
-        if(!savedGames) {
+        if(!savedGames || savedGames.length === 0) {
             return h.response({ error: "No list found." }).code(404);
         }
 
@@ -37,7 +58,7 @@ exports.addList = async(request, h) => {
             const freeToGame = await service.freeToGame("game?id=" + externalId);
 
             if (!freeToGame) {
-                return h.response({ error: "Invalid game Id."}).code(404);
+                return h.response({ error: "Invalid game ID."}).code(404);
             }
 
             //Saving game to games-collection
@@ -68,7 +89,7 @@ exports.addList = async(request, h) => {
         return h.response({ message: "Game Saved", game: title }).code(200);
 
     } catch(error) {
-        return h.response({error: "An error occurred saving game to list. Please try again later. "}).code(500);
+        return h.response({error: "An error occurred saving game to list. Try again later. "}).code(500);
     }
 }
 
@@ -79,7 +100,15 @@ exports.deleteList = async(request, h) => {
         const userId = request.auth.credentials._id;
         const gameId = request.params._id;
 
-        await list.updateOne({ userId: userId }, { $pull: { games: { $in: [gameId] }}});
+        if(!isValidObjectId(gameId)) {
+            return h.response({ error: "Invalid game ID." }).code(404);
+        }
+
+        const result = await list.updateOne({ userId: userId }, { $pull: { games: { $in: [gameId] }}});
+
+        if(result.modifiedCount === 0) {
+            return h.response({ error: "Invalid game ID." }).code(404);
+        }
 
         return h.response({ message: "Game removed from list." }).code(200);
         
