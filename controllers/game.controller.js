@@ -68,11 +68,11 @@ exports.getGame = async(request, h) => {
             }
 
             //Checking for user
-            const _id = request.auth?.credentials?._id;
+            const currentUser = request.auth?.credentials?._id;
 
-            if(_id) {
+            if(currentUser) {
                 
-                const userList = await list.findOne({ userId: _id, games: { $in: [gameOverview._id] }});
+                const userList = await list.findOne({ userId: currentUser, games: { $in: [gameOverview._id] }});
 
                 if(userList) {
                     saved = true;
@@ -103,6 +103,7 @@ exports.getGame = async(request, h) => {
         return h.response(response).code(200);
 
     } catch(error) {
+        console.log(error)
         return h.response({ error: "An error occurred while fetching game. Please try again later." }).code(500);
     }
 }

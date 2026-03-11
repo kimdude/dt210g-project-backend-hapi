@@ -13,6 +13,8 @@ Detta API hanterar, utöver recensioner, spels genomsnitts poäng, användare oc
 |GET               |/profile/reviews   |Hämtar användarens delade recensioner   |Ja                     |                       | 
 |GET               |/validate          |Validerar token                         |//                     |                       |
 
+Vid hämtning av specifika spel kan jwt-token skickas med för inloggade användare. På så vis anges om spel är sparade i användarens lista eller inte. Skickas token inte med är default _false_.
+
 ### POST - Registrering och inloggning
 För att registrera en användare skickas JSON-objekt i följande format:
 ```json

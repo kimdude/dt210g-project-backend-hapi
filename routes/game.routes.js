@@ -17,7 +17,13 @@ module.exports = (server) => {
         {
             method: "GET",
             path: "/games/{_id}",
-            handler: game.getGame
+            handler: game.getGame,
+            options: {
+                auth: {
+                    mode: "optional",
+                    strategy: "jwt"
+                }
+            }
         },
 
         //Adding review
