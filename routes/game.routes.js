@@ -44,18 +44,6 @@ module.exports = (server) => {
             }
         },
 
-        //Updating vote
-        {
-            method: "PUT",
-            path: "/games/reviews/{_id}/vote",
-            handler: game.updateVote,
-            options: {
-                auth: {
-                    strategy: "jwt"
-                }
-            }
-        },
-
         //Deleting review
         {
             method: "DELETE",

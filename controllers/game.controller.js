@@ -12,11 +12,30 @@ const service = require("../services/freeToGame.service");
 exports.getAllGames = async(request, h) => {
     try {
 
-        const result = await service.freeToGame(null);
+        let query = null;
+
+        //Checking for query
+        const platform = request.query?.platform;
+        const category = request.query?.category;
+
+        if(platform && category) {
+            query = "games?platform=" + platform + "&category=" + category;
+        } else if(platform) {
+            query = "games?platform=" + platform;
+        } else if(category) {
+            query = "games?category=" + category;
+        }
+
+        const result = await service.freeToGame(query);
         return h.response(result).code(200);
 
     } catch(error) {
-        return h.response({ error: "An error occurred while fetching all games. Please try again later." }).code(500);
+
+        if(error.message === "Invalid query.") {
+            return h.response({ error: error.message }).code(404);
+        }
+        
+        return h.response({ error: "An error occurred while fetching all games: " + error.message }).code(500);
     }
 }
 
@@ -96,6 +115,7 @@ exports.addReview = async(request, h) => {
         const externalId = request.params._id;
         const { rating, title, description } = request.payload;
 
+        let currentGame;
         let internalId;
 
         //Validating ID
@@ -112,15 +132,26 @@ exports.addReview = async(request, h) => {
             const newGame = new game({ gameId: externalId, name: freeToGame.title });
             const storedGame = await newGame.save();
             
+            currentGame = storedGame;
             internalId = storedGame._id;
 
         } else {
+            currentGame = validId;
             internalId = validId._id;
         }
 
         //Creating new review
         const newReview = new review({ userId: userId, gameId: internalId, rating: rating, title: title, description: description });
         const finalReview = await newReview.save();
+
+        //Updating games score
+        const fetchedRatings = await review.find({ gameId: internalId }, { rating: 1, _id: 0 });
+        const ratingsArr = fetchedRatings.map((item) => item.rating);
+        const sum = ratingsArr.reduce((total, current) => total + current, 0);
+        const score = sum / ratingsArr.length;
+
+        currentGame.score = score;
+        await currentGame.save();
 
         return h.response(finalReview).code(200);
 
@@ -133,6 +164,7 @@ exports.addReview = async(request, h) => {
 //Updating review
 exports.updateReview = async(request, h) => {
     try {
+        const userId = request.auth.credentials._id;
         const reviewId = request.params._id;
         const { rating, title, description } = request.payload;
 
@@ -143,11 +175,24 @@ exports.updateReview = async(request, h) => {
             return h.response({ error: "Invalid review ID." }).code(404);
         }
 
+        //Validating user
+        if(validReview.userId.toString() !== userId.toString()) {
+            return h.response({ error: "Invalid user ID." }).code(403);
+        }
+
         validReview.rating = rating;
         validReview.title = title;
         validReview.description = description;
 
         const updatedReview = await validReview.save();
+
+        //Updating games score
+        const fetchedRatings = await review.find({ gameId: validReview.gameId }, { rating: 1, _id: 0 });
+        const ratingsArr = fetchedRatings.map((item) => item.rating);
+        const sum = ratingsArr.reduce((total, current) => total + current, 0);
+        const score = sum / ratingsArr.length;
+
+        await game.findOneAndUpdate({ _id: validReview.gameId }, { score: score }).lean();
 
         return h.response(updatedReview).code(200);
 
@@ -157,33 +202,29 @@ exports.updateReview = async(request, h) => {
 }
 
 
-//Update votings on review
-exports.updateVote = async(request, h) => {
-    try {
-
-
-
-    } catch(error) {
-
-    }
-}
-
-
 //Deleting review
 exports.deleteReview = async(request, h) => {
     try {
+        const userId = request.auth.credentials._id;
         const { _id } = request.params;
 
-        const deletedReview = await review.findByIdAndDelete({ _id });
+        //Checking if user created it
+        const validReview = await review.findById(_id);
 
-        if(!deletedReview) {
+        if(!validReview) {
             return h.response({ error: "Invalid review ID." }).code(404);
         }
+
+        if(validReview.userId.toString() !== userId.toString()) {
+            return h.response({ error: "Invalid user ID." }).code(403);
+        }
+
+        //Deleting review
+        await review.findByIdAndDelete(_id);
 
         return h.response({ message: "Review deleted." }).code(200);
 
     } catch(error) {
-        console.log(error)
         return h.response({ error: "An error occurred while deleting review. Please try again later." }).code(500);
     }
 }

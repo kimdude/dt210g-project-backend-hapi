@@ -17,7 +17,12 @@ exports.freeToGame = async(endpoint) => {
         const response = await fetch(url);
 
         if(!response.ok) {
-            throw new Error("An error occurred while fetchinge external data.");
+
+            if(response.status === 404) {
+                throw new Error("Invalid query.");
+            }
+
+            throw new Error("An error occurred while fetching external data.");
         }
 
         const data = await response.json();

@@ -26,15 +26,7 @@ const ReviewSchema = new mongoose.Schema({
     description: {
         type: String,
         minlength: 5
-    },
-    upvoted: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }],
-    downvoted: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }]
+    }
 },
 { timestamps: true });
 
