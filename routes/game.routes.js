@@ -47,8 +47,8 @@ module.exports = (server) => {
                     }),
                     payload: Joi.object({
                         rating: Joi.number().min(0).max(5).required(),
-                        title: Joi.string.min(3).max(20),
-                        description: Joi.string(5)
+                        title: Joi.string().min(3).max(20),
+                        description: Joi.string().min(5)
                     })
                 }
             }
@@ -69,8 +69,8 @@ module.exports = (server) => {
                     }),
                     payload: Joi.object({
                         rating: Joi.number().min(0).max(5).required(),
-                        title: Joi.string.min(3).max(20),
-                        description: Joi.string(5)
+                        title: Joi.string().min(3).max(20),
+                        description: Joi.string().min(5)
                     })
                 }
             }
