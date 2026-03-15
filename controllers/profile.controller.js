@@ -32,6 +32,7 @@ exports.getReviews = async(request, h) => {
     try {
         const { _id } = request.auth.credentials;
 
+        //Getting reviews by userId and joining with corresponding games doc
         const sharedReviews = await review.aggregate([
             {
                 $match: {
@@ -56,13 +57,13 @@ exports.getReviews = async(request, h) => {
         ])
 
         if(!sharedReviews) {
-            return h.response({ error: "No reviews found." }).code(404);
+            return h.response({ message: "No reviews found." }).code(200);
         }
 
         return h.response(sharedReviews).code(200);  
 
     } catch(error) {
- 
+        return h.response({ error: "An error occurred fetching reviews." }).code(500)
     }
 }
 

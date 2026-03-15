@@ -5,7 +5,6 @@ const game = require("../models/game.model");
 const list = require("../models/list.model");
 
 const service = require("../services/freeToGame.service");
-const { isValidObjectId } = require("mongoose");
 
 //Getting saved games
 exports.getList = async(request, h) => {
@@ -31,7 +30,7 @@ exports.getList = async(request, h) => {
         ]);
 
         if(!savedGames || savedGames.length === 0) {
-            return h.response({ error: "No list found." }).code(404);
+            return h.response({ message: "No list found." }).code(200);
         }
 
         return h.response({ list: savedGames }).code(200);
@@ -98,10 +97,12 @@ exports.addList = async(request, h) => {
 exports.deleteList = async(request, h) => {
     try {
         const userId = request.auth.credentials._id;
-        const gameId = request.params._id;
+        const externalId = request.params._id;
 
-        if(!isValidObjectId(gameId)) {
-            return h.response({ error: "Invalid game ID." }).code(404);
+        const gameId = await game.findOne({ gameId: externalId }).select("_id");
+
+        if(!gameId) {
+            return h.response({ error: "Invalid game ID."}).code(404);
         }
 
         const result = await list.updateOne({ userId: userId }, { $pull: { games: { $in: [gameId] }}});

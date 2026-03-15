@@ -38,6 +38,33 @@ För att uppdatera lösenordet skickas ett JSON-objekt i följande format:
 }
 ```
 
+## Router för recensioner
+|Metod             |Endpoint                |Beskrivning             |Autentisering          |Övrigt                 |
+|------------------|------------------------|------------------------|-----------------------|-----------------------|
+|POST              |/games/{id}             |Lägger till recension   |Ja                     |Tar spelets siffer id  |
+|PUT               |/games/reviews/{id}     |Uppdaterar recension    |Ja                     |Tar recensionens id    |
+|DELETE            |/games/reviews/{id}     |Tar bort recension      |Ja                     |Tar recensionens id    |
+
+För att skapa, eller redigera, en recension skickas ett JSON-objekt enligt följande struktur:
+```json
+{
+  "rating": 4,
+  "title": "Bra spel",
+  "description": "Riktigt roligt spel! Har spelat det non-stop i en vecka nu."
+}
+```
+
+Rating är en betygsättning mellan 1-5. När ett nytt betyg sätts, räknas spelets genomsnitts poäng ut på nytt.
+
+
+## Router för lista med sparade spel
+|Metod             |Endpoint                |Beskrivning                     |Autentisering          |Övrigt                 |
+|------------------|------------------------|--------------------------------|-----------------------|-----------------------|
+|GET               |/saved                  |Hämtar lista med sparade spel   |Ja                     |                       |
+|POST              |/saved/{id}             |Sparar spel i listan            |Ja                     |Tar spelets siffer id  |
+|DELETE            |/saved/{id}             |Tar bort spel från listan       |Ja                     |Tar spelets siffer id  |
+
+
 ## Router för spel
 |Metod             |Endpoint           |Beskrivning             |Autentisering          |Övrigt                               |
 |------------------|-------------------|------------------------|-----------------------|-------------------------------------|
@@ -100,32 +127,5 @@ _/games?category=mmorpg_
 * tower-defense
 * horror
 * mmorts
-
-## Router för recensioner
-|Metod             |Endpoint                |Beskrivning             |Autentisering          |Övrigt                 |
-|------------------|------------------------|------------------------|-----------------------|-----------------------|
-|POST              |/games/reviews          |Lägger till recension   |Ja                     |Tar spelets siffer id  |
-|PUT               |/games/reviews/{id}     |Uppdaterar recension    |Ja                     |Tar recensionens id    |
-|DELETE            |/games/reviews/{id}     |Tar bort recension      |Ja                     |Tar recensionens id    |
-
-För att skapa, eller redigera, en recension skickas ett JSON-objekt enligt följande struktur:
-```json
-{
-  "rating": 4,
-  "title": "Bra spel",
-  "description": "Riktigt roligt spel! Har spelat det non-stop i en vecka nu."
-}
-```
-
-Rating är en betygsättning mellan 1-5. När ett nytt betyg sätts, räknas spelets genomsnitts poäng ut på nytt.
-
-
-## Router för lista med sparade spel
-|Metod             |Endpoint                |Beskrivning                     |Autentisering          |Övrigt                 |
-|------------------|------------------------|--------------------------------|-----------------------|-----------------------|
-|GET               |/saved                  |Hämtar lista med sparade spel   |Ja                     |                       |
-|POST              |/saved/{id}             |Sparar spel i listan            |Ja                     |Tar spelets siffer id  |
-|DELETE            |/saved/{id}             |Tar bort spel från listan       |Ja                     |Tar spelets siffer id  |
-
 
 __Kim Dudenhöfer, 2026-03-11__

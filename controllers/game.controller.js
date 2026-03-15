@@ -60,8 +60,34 @@ exports.getGame = async(request, h) => {
         if(gameOverview) {
             score = gameOverview.score;
 
-            //Checking for reviews
-            const gameReviews = await review.find({ gameId: gameOverview._id });
+            //Checking for reviews and joining with user collection
+            const gameReviews = await review.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                {
+                    $unwind: "$user"
+                },
+                {
+                    $project: {
+                        displayName: "$user.displayName",
+                        _id: 1,
+                        userId: 1,
+                        title: 1,
+                        rating: 1,
+                        description: 1,
+                        createdAt: 1,
+                        updatedAt: 1,
+                        gameId: 1
+                    }
+                }
+            ]);
+            
 
             if(gameReviews.length > 0) {
                 reviews = gameReviews;
@@ -103,7 +129,6 @@ exports.getGame = async(request, h) => {
         return h.response(response).code(200);
 
     } catch(error) {
-        console.log(error)
         return h.response({ error: "An error occurred while fetching game. Please try again later." }).code(500);
     }
 }
