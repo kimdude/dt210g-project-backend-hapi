@@ -63,6 +63,11 @@ exports.getGame = async(request, h) => {
             //Checking for reviews and joining with user collection
             const gameReviews = await review.aggregate([
                 {
+                    $match: {
+                        gameId: gameOverview._id
+                    }
+                },
+                {
                     $lookup: {
                         from: "users",
                         localField: "userId",
