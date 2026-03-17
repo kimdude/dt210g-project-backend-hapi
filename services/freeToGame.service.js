@@ -12,6 +12,8 @@ exports.freeToGame = async(endpoint) => {
         url = "https://www.freetogame.com/api/games";
     }
 
+    console.log(url)
+
     //Fetching data
     try {
         const response = await fetch(url);

@@ -71,7 +71,17 @@ Rating är en betygsättning mellan 1-5. När ett nytt betyg sätts, räknas spe
 |GET               |/games             |Hämtar samtliga spel    |Nej                    |Tar query för kategori och plattform |
 |GET               |/games/{id}        |Hämtar specifikt spel   |Nej                    |Tar spelets siffer id                |  
 
-Vid hämtning av samtliga spel med GET, kan även queries för plattformer och kategorier skickas med. För att filtrera på kategori och plattform kan exempelvis följande queries användas:
+Genom det externa API:et kan, vid hämtning av samtliga spel med GET, en query skickas med för att sortera spel:
+_/games?sortBy=popularity_
+
+**Sortera efter**
+* release-date
+* popularity
+* alphabetical
+* relevance
+
+
+Dessutom kan även queries för plattformer och kategorier skickas med. För att filtrera på kategori och plattform kan exempelvis följande queries användas:
 _/games?platform=pc&category=mmorpg_
 
 **Plattformer**

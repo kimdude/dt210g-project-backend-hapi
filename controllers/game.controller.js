@@ -17,6 +17,7 @@ exports.getAllGames = async(request, h) => {
         //Checking for query
         const platform = request.query?.platform;
         const category = request.query?.category;
+        const sortBy = request.query?.sortBy;
 
         if(platform && category) {
             query = "games?platform=" + platform + "&category=" + category;
@@ -24,6 +25,8 @@ exports.getAllGames = async(request, h) => {
             query = "games?platform=" + platform;
         } else if(category) {
             query = "games?category=" + category;
+        } else if(sortBy) {
+            query = "games?sort-by=" + sortBy;
         }
 
         const result = await service.freeToGame(query);
