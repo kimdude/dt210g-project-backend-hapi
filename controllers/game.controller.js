@@ -265,6 +265,18 @@ exports.deleteReview = async(request, h) => {
         //Deleting review
         await review.findByIdAndDelete(_id);
 
+        //Updating games score
+        const fetchedRatings = await review.find({ gameId: validReview.gameId }, { rating: 1, _id: 0 });
+        const ratingsArr = fetchedRatings.map((item) => item.rating);
+        const sum = ratingsArr.reduce((total, current) => total + current, 0);
+        let score = 0;
+        
+        if(ratingsArr.length > 0){
+            score = sum / ratingsArr.length;
+        }
+
+        await game.findOneAndUpdate({ _id: validReview.gameId }, { score: score }).lean();
+
         return h.response({ message: "Review deleted." }).code(200);
 
     } catch(error) {
